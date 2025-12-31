@@ -1,0 +1,8 @@
+{
+    "name": "Portals Clone Pro",
+    "description": "TON WebApp demo ilovasi",
+    "iconUrl": "",
+    "redirectUrl": "https://t.me/UzbNftMRKTbot?start=callback",
+    "defaultChain": "mainnet",
+    "appUrl": "https://raw.githubusercontent.com/Zzycx-cloud/portals-clone-pro/main/index.html"
+}

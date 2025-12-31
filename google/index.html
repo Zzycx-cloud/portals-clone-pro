@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portals Clone Pro</title>
+
+<!-- Telegram WebApp SDK -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- TON Connect UI SDK -->
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+
+<style>
+:root {
+    --bg-color: #171c26;
+    --text-color: #ffffff;
+    --secondary-bg: #1e2633;
+    --accent-color: #0088cc;
+    --hint-color: #999999;
+    --safe-area-bottom: env(safe-area-inset-bottom);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: sans-serif; background: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; text-align: center; }
+.container { padding: 16px; padding-bottom: calc(80px + var(--safe-area-bottom)); }
+.header { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+.card { background: var(--secondary-bg); border-radius: 12px; padding: 16px; margin-bottom: 16px; display:inline-block; min-width:250px; }
+.balance-title { font-size: 14px; color: var(--hint-color); }
+.balance-amount { font-size: 32px; font-weight: bold; margin: 10px 0; }
+.action-btn { background: var(--secondary-bg); border: none; border-radius: 12px; padding: 12px 20px; color: var(--text-color); cursor: pointer; font-weight: bold; margin:5px; }
+.action-btn:active { transform: scale(0.95); opacity: 0.8; }
+.tab-bar { position: fixed; bottom: 0; width: 100%; background: var(--secondary-bg); display: flex; padding-bottom: var(--safe-area-bottom); border-top: 0.5px solid rgba(0,0,0,0.1); }
+.tab-item { flex: 1; text-align: center; padding: 10px 0; color: var(--hint-color); font-size: 12px; cursor: pointer; }
+.tab-item.active { color: var(--accent-color); }
+.tab-icon { display: block; font-size: 20px; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+<div class="container">
+    <!-- Hamyon -->
+    <section id="wallet" class="page active">
+        <div class="header">Hamyon</div>
+        <div class="card">
+            <div class="balance-title">Balansingiz</div>
+            <div class="balance-amount" id="balance">0.00 TON</div>
+            <div id="ton-connect-button" style="display: flex; justify-content: center; margin-top: 15px;"></div>
+        </div>
+        <div>
+            <button class="action-btn" onclick="openTonConnectModal()">➕ To'ldirish</button>
+            <button class="action-btn" onclick="openAdmin()">🖼 NFT yuborish</button>
+        </div>
+    </section>
+
+    <!-- Market -->
+    <section id="market" class="page">
+        <div class="header">Market</div>
+        <div class="card">
+            <p>Tez kunda NFT savdosi yo'lga qo'yiladi.</p>
+        </div>
+    </section>
+
+    <!-- Tab bar -->
+    <nav class="tab-bar">
+        <div class="tab-item active" onclick="switchTab('wallet', this)">
+            <span class="tab-icon">💎</span>
+            <span>Hamyon</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('market', this)">
+            <span class="tab-icon">🛒</span>
+            <span>Market</span>
+        </div>
+    </nav>
+</div>
+
+<script>
+const tg = window.Telegram?.WebApp || {};
+let currentWallet = null;
+let tonConnectUI = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    if(tg.ready) tg.ready();
+    if(tg.expand) tg.expand();
+
+    // TON Connect UI
+    tonConnectUI = new TonConnectUI.TonConnectUI({
+        manifestUrl: 'https://raw.githubusercontent.com/Zzycx-cloud/portals-clone-pro/main/manifest.json',
+        buttonRootId: 'ton-connect-button'
+    });
+
+    tonConnectUI.onStatusChange(wallet => {
+        currentWallet = wallet;
+        const balanceEl = document.getElementById('balance');
+        if(wallet) {
+            balanceEl.innerText = wallet.balance ? wallet.balance + " TON" : "Ulangan";
+            tg.HapticFeedback?.notificationOccurred('success');
+        } else {
+            balanceEl.innerText = "0.00 TON";
+        }
+    });
+});
+
+function switchTab(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    tg.HapticFeedback?.impactOccurred('light');
+}
+
+function openTonConnectModal() {
+    if(tonConnectUI) {
+        tonConnectUI.openModal();
+        tg.HapticFeedback?.impactOccurred('medium');
+    } else {
+        tg.showAlert?.("Ilova yuklanmoqda, birozdan so'ng qayta urinib ko'ring.");
+    }
+}
+
+function openAdmin() {
+    tg.openTelegramLink?.("https://t.me/TylerDurovv");
+}
+</script>
+</body>
+</html>
