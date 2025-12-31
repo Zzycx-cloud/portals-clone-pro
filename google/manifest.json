@@ -1,8 +1,0 @@
-{
-    "name": "Portals Clone Pro",
-    "description": "TON WebApp demo ilovasi",
-    "iconUrl": "https://raw.githubusercontent.com/<Zzycx-cloud>/portals-clone-pro/main/icon.png",
-    "redirectUrl": "https://<your-domain-or-telegram-bot-url>/callback",
-    "defaultChain": "mainnet",
-    "appUrl": "https://<your-domain-or-telegram-webapp>/"
-}
